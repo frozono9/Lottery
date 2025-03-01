@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Numbers - Official Lottery Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a5fb4;
+            --secondary: #ffd700;
+            --tertiary: #ff6b6b;
+            --success: #2ecc71;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: var(--dark);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), #3584e4);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            margin-bottom: 0.5rem;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-right: 10px;
+            animation: spin 10s infinite linear;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            min-width: 320px;
+            max-width: 700px;
+        }
+        
+        .sidebar {
+            width: 300px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+        
+        .card-header i {
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        button i {
+            margin-right: 8px;
+        }
+        
+        button:hover {
+            background-color: #0d4d9a;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .check-btn {
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+        
+        #result {
+            display: none;
+        }
+        
+        .result-card {
+            text-align: center;
+            background: linear-gradient(135deg, #f5f7fa, #e4e8f0);
+        }
+        
+        .result-status {
+            font-size: 1.5rem;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        
+        .not-winner {
+            color: #e74c3c;
+        }
+        
+        .winner {
+            color: #2ecc71;
+            animation: pulse 2s infinite;
+        }
+        
+        .winning-number {
+            font-size: 1.3rem;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: rgba(26, 95, 180, 0.1);
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        .winning-number span {
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+        
+        .purchased-info {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        
+        .winners-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .winners-table th, .winners-table td {
+            border: 1px solid #e0e0e0;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .winners-table th {
+            background-color: #f5f7fa;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .winners-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .winners-table tr:hover {
+            background-color: #f0f4f8;
+        }
+        
+        .jackpot-card {
+            background: linear-gradient(135deg, #f9ca24, #f0932b);
+            color: white;
+            text-align: center;
+        }
+        
+        .jackpot-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 10px 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        
+        .jackpot-label {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .drawing-info {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+        
+        .ad-card {
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7b4397, #dc2430);
+            color: white;
+            text-align: center;
+        }
+        
+        .ad-content {
+            padding: 20px;
+            width: 100%;
+        }
+        
+        .ad-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .ad-text {
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+        
+        .ad-btn {
+            background-color: white;
+            color: var(--primary);
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: inline-block;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .ad-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ad-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            font-size: 0.7rem;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            position: relative;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 10px 0;
+        }
+        
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .settings-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            background: transparent;
+            color: #7f8c8d;
+            font-size: 0.8rem;
+            padding: 5px;
+            opacity: 0.3;
+            border-radius: 3px;
+        }
+        
+        .settings-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: none;
+            box-shadow: none;
+            opacity: 1;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: var(--primary);
+        }
+        
+        .close-btn {
+            background: transparent;
+            color: #7f8c8d;
+            font-size: 1.5rem;
+            padding: 0;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .close-btn:hover {
+            color: #e74c3c;
+            background: transparent;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .settings-group {
+            margin-bottom: 15px;
+        }
+        
+        .settings-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .jackpot-amount {
+                font-size: 2rem;
+            }
+        }
+        
+        /* Pagination for winners table */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .pagination button {
+            padding: 8px 12px;
+            margin: 0 5px;
+            background-color: #f5f7fa;
+            color: var(--primary);
+            border: 1px solid #e0e0e0;
+        }
+        
+        .pagination button.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .pagination button:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-dice"></i>
+            <h1>Lotto Whisper</h1>
+        </div>
+        <p>Check if your lottery number is a winner!</p>
+    </div>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Number Checker</h2>
+                    <i class="fas fa-search-dollar"></i>
+                </div>
+                <label for="lottery-number">Enter your 5-digit lottery number:</label>
+                <input type="text" id="lottery-number" placeholder="Enter your 5-digit number (e.g. 12345)" maxlength="5">
+                <button class="check-btn" onclick="checkNumber()">
+                    <i class="fas fa-check-circle"></i> Check My Number
+                </button>
+            </div>
+
+            <div class="card result-card" id="result">
+                <div class="card-header">
+                    <h2>Results</h2>
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <p class="result-status" id="status"></p>
+                <p class="winning-number" id="winning-number"></p>
+                <p class="purchased-info" id="purchased-count"></p>
+            </div>
+
+            <div class="card" id="winner-list">
+                <div class="card-header">
+                    <h2>Recent Winners</h2>
+                    <i class="fas fa-award"></i>
+                </div>
+                <div class="winners-container">
+                    <table class="winners-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Number</th>
+                                <th>Prize</th>
+                            </tr>
+                        </thead>
+                        <tbody id="winners">
+                            <!-- Winners will be populated here -->
+                        </tbody>
+                    </table>
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination buttons will be added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card ad-card">
+                <div class="ad-badge">Advertisement</div>
+                <div class="ad-content">
+                    <div class="ad-title">Double Your Chances!</div>
+                    <div class="ad-text">Subscribe to our premium number prediction service and increase your odds of winning!</div>
+                    <a href="#" class="ad-btn">Learn More</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar">
+            <div class="card jackpot-card">
+                <div class="card-header">
+                    <h2>Current Jackpot</h2>
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="jackpot-amount">$42,500,000</div>
+                <div class="jackpot-label">and growing!</div>
+                <div class="drawing-info">
+                    <p>Next Drawing: March 5, 2025</p>
+                    <p>Time Remaining: 4d 6h 32m</p>
+                </div>
+            </div>
+            
+            <div class="card ad-card">
+                <div class="ad-badge">Advertisement</div>
+                <div class="ad-content">
+                    <div class="ad-title">Lucky Charms</div>
+                    <div class="ad-text">Improve your luck with our special lucky charm collection!</div>
+                    <a href="#" class="ad-btn">Shop Now</a>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h2>Hot Numbers</h2>
+                    <i class="fas fa-fire"></i>
+                </div>
+                <p>Most frequently drawn numbers this month:</p>
+                <div style="display: flex; justify-content: space-around; margin: 15px 0;">
+                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">17</span>
+                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">24</span>
+                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">33</span>
+                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">42</span>
+                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">51</span>
+                </div>
+            </div>
+
+            <div class="card ad-card" style="background: linear-gradient(135deg, #3498db, #2ecc71);">
+                <div class="ad-badge">Advertisement</div>
+                <div class="ad-content">
+                    <div class="ad-title">Exclusive Lottery Tips</div>
+                    <div class="ad-text">Get insider tips and strategies to increase your chances of winning the lottery. Subscribe to our newsletter now!</div>
+                    <a href="https://www.lotterytips.com" class="ad-btn" target="_blank">Subscribe Now</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Home</a>
+            <a href="#">About</a>
+            <a href="#">Winners</a>
+            <a href="#">How to Play</a>
+            <a href="#">Responsible Gaming</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <p>&copy; 2025 Lucky Numbers. All rights reserved.</p>
+        <button class="settings-btn" id="settings-btn">Admin Settings</button>
+    </footer>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Admin Settings</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="settings-group">
+                <label for="force-name">Forced Winner Name:</label>
+                <input type="text" id="force-name" placeholder="Enter name">
+            </div>
+            <div class="settings-group">
+                <label for="force-number">Forced Winning Number:</label>
+                <input type="text" id="force-number" placeholder="Enter 5-digit number" maxlength="5">
+            </div>
+            <div class="settings-group">
+                <label for="force-date">Forced Winner Date:</label>
+                <input type="text" id="force-date" placeholder="MM/DD/YYYY">
+            </div>
+            <div class="settings-group">
+                <label for="force-prize">Forced Prize Amount:</label>
+                <input type="text" id="force-prize" placeholder="$5,000,000">
+            </div>
+            <button onclick="saveSettings()">
+                <i class="fas fa-save"></i> Save Settings
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialization with default values
+        let forcedName = "Shaun Dunn";
+        let forcedDate = "12/08/2024";
+        let forcedNumber = "63954";
+        let forcedPrize = "$1,200,000";
+        
+        // Track current page for pagination
+        let currentPage = 1;
+        const rowsPerPage = 15;
+
+        const realNames = [
+            "John Smith", "Jane Doe", "Michael Johnson", "Emily Davis", "Chris Brown",
+            "Jessica Wilson", "Daniel Martinez", "Sarah Taylor", "James Anderson", "Laura Thomas",
+            "Robert White", "Linda Harris", "David Clark", "Sophia Lewis", "Mark Walker",
+            "Olivia Hall", "Joshua Allen", "Mia Young", "Andrew King", "Isabella Wright",
+            "William Scott", "Emma Green", "Benjamin Adams", "Ava Nelson", "Lucas Baker",
+            "Charlotte Carter", "Henry Mitchell", "Amelia Perez", "Alexander Roberts", "Evelyn Turner",
+            "Sebastian Phillips", "Harper Campbell", "Jack Parker", "Abigail Evans", "Liam Edwards",
+            "Ella Collins", "Mason Stewart", "Grace Morris", "Ethan Rogers", "Chloe Reed",
+            "Logan Cook", "Victoria Morgan", "Aiden Bell", "Hannah Murphy", "Samuel Bailey",
+            "Lily Rivera", "Matthew Cooper", "Zoe Richardson", "Jackson Cox", "Sofia Howard",
+            "Carlos García", "María Rodríguez", "José Hernández", "Ana López", "Luis González",
+            "Carmen Martínez", "Miguel Sánchez", "Lucía Pérez", "Juan Gómez", "Elena Díaz",
+            "Pedro Fernández", "Marta Torres", "Jorge Ramírez", "Laura Flores", "Sergio Ruiz",
+            "Patricia Morales", "Andrés Ortiz", "Claudia Jiménez", "Fernando Castro", "Natalia Romero",
+            "Hiroshi Tanaka", "Yuki Yamamoto", "Kenji Suzuki", "Sakura Watanabe", "Takeshi Nakamura",
+            "Aiko Kobayashi", "Yuto Kato", "Miyu Yoshida", "Haruto Yamada", "Rina Saito",
+            "Luca Rossi", "Giulia Russo", "Matteo Ferrari", "Sofia Bianchi", "Alessandro Conti",
+            "Chiara Romano", "Davide Greco", "Martina Gallo", "Francesco Rizzo", "Elisa Lombardi",
+            "Pierre Martin", "Marie Dubois", "Jean Leroy", "Sophie Moreau", "Louis Simon",
+            "Camille Laurent", "Lucas Lefevre", "Chloé Bernard", "Hugo Dupont", "Emma Richard",
+            "Ivan Ivanov", "Anastasia Smirnova", "Dmitry Kuznetsov", "Olga Popova", "Alexey Vasiliev",
+            "Ekaterina Petrov", "Nikolai Sokolov", "Irina Mikhailova", "Sergey Fedorov", "Natalia Morozova"
+        ];
+
+        function randomDate() {
+            const year = Math.floor(Math.random() * 5) + 2020;
+            const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+            const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+            return `${month}/${day}/${year}`;
+        }
+
+        function randomPrize() {
+            const amounts = [50000, 75000, 100000, 150000, 250000, 500000, 1000000, 123456, 789012, 345678, 987654, 234567, 876543];
+            return `$${amounts[Math.floor(Math.random() * amounts.length)].toLocaleString()}`;
+        }
+
+        // Generate winning number based on the specified algorithm
+        function generateWinningNumber(inputNumber) {
+            // Step 1: Reverse the number
+            const reversed = inputNumber.split('').reverse().join('');
+            
+            // Step 2: Subtract each digit from 10, but keep 0 as 0
+            const result = reversed.split('').map(digit => {
+                const num = parseInt(digit);
+                return num === 0 ? 0 : 10 - num;
+            }).join('');
+            
+            return result;
+        }
+
+        // Generate 100 random winners
+        const winners = Array.from({ length: 100 }, (_, index) => ({
+            name: realNames[Math.floor(Math.random() * realNames.length)],
+            date: randomDate(),
+            number: `${Math.floor(10000 + Math.random() * 90000)}`,
+            prize: randomPrize()
+        }));
+
+        function checkNumber() {
+            const input = document.getElementById("lottery-number");
+            const number = input.value;
+            
+            if (number.length !== 5 || isNaN(number)) {
+                input.style.borderColor = "red";
+                input.focus();
+                setTimeout(() => {
+                    input.style.borderColor = "#e0e0e0";
+                }, 2000);
+                return;
+            }
+
+            // Show loading state
+            document.getElementById("status").innerHTML = '<span class="loading"></span> Checking...';
+            document.getElementById("winning-number").innerHTML = '';
+            document.getElementById("result").style.display = "block";
+            
+            // Simulate processing time
+            setTimeout(() => {
+                // Generate winning number using our algorithm
+                const winningNumber = generateWinningNumber(number);
+                
+                // Display winning number in the results
+                document.getElementById("winning-number").innerHTML = `Today's winning number: <span>${winningNumber}</span>`;
+                
+                const sumOfDigits = number.split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+                const forcedRow = Math.floor(Math.random() * 15) + 1;
+                
+                // Check if this number matches the winning number
+                if (number === forcedNumber) {
+                    document.getElementById("status").innerHTML = `<span class="winner">Congratulations! <i class="fas fa-trophy"></i> Your number ${number} is a WINNER!</span>`;
+                    document.getElementById("purchased-count").innerText = `Prize Amount: ${forcedPrize}`;
+                } else {
+                    document.getElementById("status").innerHTML = `<span class="not-winner">THIS NUMBER HAS NOT BEEN AWARDED.</span>`;
+                    const peopleCount = forcedRow + 1;
+                    document.getElementById("purchased-count").innerText = `${peopleCount} people purchased the same number you did!`;
+                }
+                
+                // Update the winners array with the forced winner
+                winners[forcedRow] = {
+                    name: forcedName,
+                    date: forcedDate,
+                    number: forcedNumber,
+                    prize: forcedPrize
+                };
+                
+                showWinners();
+                
+                // Scroll to result
+                document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
+            }, 1500);
+        }
+
+        function showWinners() {
+            const winnersContainer = document.getElementById("winners");
+            winnersContainer.innerHTML = "";
+            
+            // Calculate pagination
+            const totalPages = Math.ceil(winners.length / rowsPerPage);
+            const startIndex = (currentPage - 1) * rowsPerPage;
+            const pageWinners = winners.slice(startIndex, startIndex + rowsPerPage);
+            
+            // Populate winners table
+            pageWinners.forEach((winner, index) => {
+                const globalIndex = startIndex + index;
+                winnersContainer.innerHTML += `
+                    <tr>
+                        <td>${globalIndex + 1}</td>
+                        <td>${winner.name}</td>
+                        <td>${winner.date}</td>
+                        <td>${winner.number}</td>
+                        <td>${winner.prize}</td>
+                    </tr>
+                `;
+            });
+            
+            // Update pagination buttons
+            updatePagination(totalPages);
+            
+            document.getElementById("winner-list").style.display = "block";
+        }
+        
+        function updatePagination(totalPages) {
+            const paginationContainer = document.getElementById("pagination");
+            paginationContainer.innerHTML = "";
+            
+            // Previous button
+            if (totalPages > 1) {
+                paginationContainer.innerHTML += `
+                    <button onclick="changePage(${Math.max(1, currentPage - 1)})" ${currentPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                `;
+            }
+            
+            // Page numbers
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                paginationContainer.innerHTML += `
+                    <button onclick="changePage(${i})" class="${currentPage === i ? 'active' : ''}">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // Next button
+            if (totalPages > 1) {
+                paginationContainer.innerHTML += `
+                    <button onclick="changePage(${Math.min(totalPages, currentPage + 1)})" ${currentPage === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                `;
+            }
+        }
+        
+        function changePage(page) {
+            currentPage = page;
+            showWinners();
+        }
+        
+        // Settings Modal Functions
+        function openModal() {
+            document.getElementById("settings-modal").style.display = "block";
+            document.getElementById("force-name").value = forcedName;
+            document.getElementById("force-number").value = forcedNumber;
+            document.getElementById("force-date").value = forcedDate;
+            document.getElementById("force-prize").value = forcedPrize;
+        }
+        
+        function closeModal() {
+            document.getElementById("settings-modal").style.display = "none";
+        }
+        
+        function saveSettings() {
+            const nameInput = document.getElementById("force-name").value;
+            const numberInput = document.getElementById("force-number").value;
+            const dateInput = document.getElementById("force-date").value;
+            const prizeInput = document.getElementById("force-prize").value;
+            
+            // Validate inputs
+            if (nameInput.trim() !== "") {
+                forcedName = nameInput;
+            }
+            
+            if (numberInput.length === 5 && !isNaN(numberInput)) {
+                forcedNumber = numberInput;
+            }
+            
+            if (dateInput.trim() !== "") {
+                forcedDate = dateInput;
+            }
+            
+            if (prizeInput.trim() !== "") {
+                forcedPrize = prizeInput;
+            }
+            
+            closeModal();
+            
+            // Show confirmation toast
+            const toast = document.createElement("div");
+            toast.style.position = "fixed";
+            toast.style.bottom = "20px";
+            toast.style.left = "50%";
+            toast.style.transform = "translateX(-50%)";
+            toast.style.backgroundColor = "#2ecc71";
+            toast.style.color = "white";
+            toast.style.padding = "10px 20px";
+            toast.style.borderRadius = "5px";
+            toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.1)";
+            toast.style.zIndex = "1000";
+            toast.innerHTML = "<i class='fas fa-check-circle'></i> Settings saved successfully!";
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                toast.style.transition = "opacity 0.5s";
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 500);
+            }, 3000);
+        }
+        
+        // Event listeners
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("settings-btn").addEventListener("click", openModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener("click", function(event) {
+                if (event.target === document.getElementById("settings-modal")) {
+                    closeModal();
+                }
+            });
+            
+            // Allow Enter key to check number
+            document.getElementById("lottery-number").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    checkNumber();
+                }
+            });
+            
+            // Initialize winners list
+            showWinners();
+        });
+    </script>
+</body>
+</html>
