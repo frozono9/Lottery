@@ -634,29 +634,30 @@
         <div class="header-strip">
             <div class="next-draw">
                 <div class="next-draw-label">NEXT DRAWING:</div>
-                <div class="next-draw-number">27</div>
+                <div class="next-draw-number">
+                    <script>
+                        const today = new Date();
+                        const nextDrawDate = new Date(today);
+                        nextDrawDate.setDate(today.getDate() + 2);
+                        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+                        document.write(nextDrawDate.toLocaleDateString('en-US', options));
+                    </script>
+                </div>
             </div>
             <div class="jackpot-amount">
                 <span class="euro-sign">JACKPOT:</span>
-                <span>$42,500,000</span>
+                <span id="jackpot-amount"></span>
             </div>
+            <script>
+                const baseJackpot = 42500000;
+                const fluctuation = Math.floor(Math.random() * 1000000) - 500000; // Random fluctuation between -500,000 and +500,000
+                const todayJackpot = baseJackpot + fluctuation;
+                document.getElementById('jackpot-amount').innerText = `$${todayJackpot.toLocaleString()}`;
+            </script>
         </div>
     </div>
 
-    <div style="height: 20px;"></div> <!-- Added spacing -->
-
-    <!-- <div class="jackpot-card">
-        <div class="card-header">
-            <!-- <h2>Current Jackpot</h2> -->
-            <!-- <i class="fas fa-money-bill-wave"></i> -->
-        <!-- </div>
-        <div class="jackpot-amount">$42,500,000</div>
-        <div class="jackpot-label">and growing!</div>
-        <div class="drawing-info">
-            <p>Next Drawing: March 5, 2025</p>
-            <p>Time Remaining: 4d 6h 32m</p>
-        </div>
-    </div> -->
+    <div style="height: 20px;"></div>
 
     <div class="container">
         <div class="content-wrapper">
@@ -666,7 +667,7 @@
                     <i class="fas fa-search-dollar"></i>
                 </div>
                 <label for="lottery-number">Enter your 5-digit lottery number:</label>
-                <input type="text" id="lottery-number" placeholder="Enter your 5-digit number (e.g. 12345)" maxlength="5">
+                <input type="text" id="lottery-number" placeholder="ENTER NUMBER" maxlength="5">
                 <button class="check-btn" onclick="checkNumber()">
                     <i class="fas fa-check-circle"></i> Check My Number
                 </button>
@@ -722,14 +723,14 @@
                 </div>
             </div>
             
-            <div class="card ad-card">
+            <!-- <div class="card ad-card">
                 <div class="ad-badge">Advertisement</div>
                 <div class="ad-content">
                     <div class="ad-title">Double Your Chances!</div>
                     <div class="ad-text">Subscribe to our premium number prediction service and increase your odds of winning!</div>
                     <a href="#" class="ad-btn">Learn More</a>
                 </div>
-            </div>
+            </div> -->
 
             <div class="card ad-card" style="background: linear-gradient(135deg, #3498db, #2ecc71);">
                 <div class="ad-badge">Advertisement</div>
