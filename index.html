@@ -48,23 +48,17 @@
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 800px; /* Set a fixed max-width for all content */
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column; /* Stack elements vertically */
+            align-items: center;
             justify-content: center;
-            gap: 20px;
         }
         
-        .main-content {
-            flex: 1;
-            min-width: 320px;
-            max-width: 700px;
-        }
-        
-        .sidebar {
-            width: 300px;
+        .content-wrapper {
+            width: 100%; /* Make all content full width of container */
         }
         
         .card {
@@ -74,6 +68,8 @@
             padding: 20px;
             margin-bottom: 20px;
             transition: transform 0.3s ease;
+            width: 100%; /* Make all cards same width */
+            box-sizing: border-box;
         }
         
         .card:hover {
@@ -228,6 +224,10 @@
             background: linear-gradient(135deg, #f9ca24, #f0932b);
             color: white;
             text-align: center;
+            max-width: 800px; /* Match container max-width */
+            width: 100%;
+            margin: 0 auto 20px auto;
+            box-sizing: border-box;
         }
         
         .jackpot-amount {
@@ -426,14 +426,6 @@
 
         /* Responsive adjustments */
         @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-            }
-            
             .jackpot-amount {
                 font-size: 2rem;
             }
@@ -512,10 +504,10 @@
 
     <div style="height: 20px;"></div> <!-- Added spacing -->
 
-    <div class="card jackpot-card">
+    <div class="jackpot-card">
         <div class="card-header">
-            <h2>Current Jackpot</h2>
-            <i class="fas fa-money-bill-wave"></i>
+            <!-- <h2>Current Jackpot</h2> -->
+            <!-- <i class="fas fa-money-bill-wave"></i> -->
         </div>
         <div class="jackpot-amount">$42,500,000</div>
         <div class="jackpot-label">and growing!</div>
@@ -526,7 +518,7 @@
     </div>
 
     <div class="container">
-        <div class="main-content">
+        <div class="content-wrapper">
             <div class="card">
                 <div class="card-header">
                     <h2>Number Checker</h2>
@@ -573,27 +565,7 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="card ad-card">
-                <div class="ad-badge">Advertisement</div>
-                <div class="ad-content">
-                    <div class="ad-title">Double Your Chances!</div>
-                    <div class="ad-text">Subscribe to our premium number prediction service and increase your odds of winning!</div>
-                    <a href="#" class="ad-btn">Learn More</a>
-                </div>
-            </div>
-        </div>
 
-        <div class="sidebar">
-            <div class="card ad-card">
-                <div class="ad-badge">Advertisement</div>
-                <div class="ad-content">
-                    <div class="ad-title">Lucky Charms</div>
-                    <div class="ad-text">Improve your luck with our special lucky charm collection!</div>
-                    <a href="#" class="ad-btn">Shop Now</a>
-                </div>
-            </div>
-            
             <div class="card">
                 <div class="card-header">
                     <h2>Hot Numbers</h2>
@@ -608,6 +580,15 @@
                     <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">51</span>
                 </div>
             </div>
+            
+            <div class="card ad-card">
+                <div class="ad-badge">Advertisement</div>
+                <div class="ad-content">
+                    <div class="ad-title">Double Your Chances!</div>
+                    <div class="ad-text">Subscribe to our premium number prediction service and increase your odds of winning!</div>
+                    <a href="#" class="ad-btn">Learn More</a>
+                </div>
+            </div>
 
             <div class="card ad-card" style="background: linear-gradient(135deg, #3498db, #2ecc71);">
                 <div class="ad-badge">Advertisement</div>
@@ -617,7 +598,6 @@
                     <a href="https://www.lotterytips.com" class="ad-btn" target="_blank">Subscribe Now</a>
                 </div>
             </div>
-
         </div>
     </div>
 
