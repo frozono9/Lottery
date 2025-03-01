@@ -24,28 +24,129 @@
         }
         
         .header {
-            background: linear-gradient(135deg, var(--primary), #3584e4);
+            background: linear-gradient(to right, #0f4c81, #1e73be);
             color: white;
-            padding: 1rem 0;
-            text-align: center;
+            padding: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .logo {
-            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
         }
         
         .logo i {
-            font-size: 2.5rem;
-            color: var(--secondary);
-            margin-right: 10px;
-            animation: spin 10s infinite linear;
+            font-size: 30px;
+            color: var(--primary);
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .logo-text {
+            display: flex;
+            flex-direction: column;
         }
+        
+        .logo-text h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .logo-text p {
+            margin: 0;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-button {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-button.primary {
+            background-color: white;
+            color: var(--primary);
+        }
+        
+        .nav-button:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-button.primary:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .header-strip {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 8px 20px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .next-draw {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .next-draw-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .next-draw-number {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: white;
+        }
+        
+        .jackpot-amount {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .euro-sign {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        
+        /* Keep all existing styles below */
         
         .container {
             max-width: 800px; /* Set a fixed max-width for all content */
@@ -456,6 +557,21 @@
             .winners-table td:nth-child(4) {
                 width: 30%;
             }
+            
+            .header-top {
+                flex-direction: column;
+                padding: 10px;
+            }
+            
+            .nav-buttons {
+                margin-top: 10px;
+            }
+            
+            .header-strip {
+                flex-direction: column;
+                gap: 5px;
+                padding: 10px;
+            }
         }
         
         /* Pagination for winners table */
@@ -491,31 +607,56 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="logo">
-            <i class="fas fa-dice"></i>
-            <h1>Lotto Whisper</h1>
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Lotto Whisper</h1>
+                    <p>OFFICIAL LOTTERY CHECKER</p>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-button">Login</button>
+                <button class="nav-button primary">Register</button>
+            </div>
         </div>
-        <p>Check if your lottery number is a winner!</p>
+        <div class="header-strip">
+            <div class="next-draw">
+                <div class="next-draw-label">NEXT DRAWING:</div>
+                <div class="next-draw-number">27</div>
+            </div>
+            <div class="jackpot-amount">
+                <span class="euro-sign">JACKPOT:</span>
+                <span>$42,500,000</span>
+            </div>
+        </div>
     </div>
 
     <div style="height: 20px;"></div> <!-- Added spacing -->
 
-    <div class="jackpot-card">
+    <!-- <div class="jackpot-card">
         <div class="card-header">
             <!-- <h2>Current Jackpot</h2> -->
             <!-- <i class="fas fa-money-bill-wave"></i> -->
-        </div>
+        <!-- </div>
         <div class="jackpot-amount">$42,500,000</div>
         <div class="jackpot-label">and growing!</div>
         <div class="drawing-info">
             <p>Next Drawing: March 5, 2025</p>
             <p>Time Remaining: 4d 6h 32m</p>
         </div>
-    </div>
+    </div> -->
 
     <div class="container">
         <div class="content-wrapper">
@@ -654,31 +795,6 @@
         let currentPage = 1;
         const rowsPerPage = 15;
 
-        const realNames = [
-            "John Smith", "Jane Doe", "Michael Johnson", "Emily Davis", "Chris Brown",
-            "Jessica Wilson", "Daniel Martinez", "Sarah Taylor", "James Anderson", "Laura Thomas",
-            "Robert White", "Linda Harris", "David Clark", "Sophia Lewis", "Mark Walker",
-            "Olivia Hall", "Joshua Allen", "Mia Young", "Andrew King", "Isabella Wright",
-            "William Scott", "Emma Green", "Benjamin Adams", "Ava Nelson", "Lucas Baker",
-            "Charlotte Carter", "Henry Mitchell", "Amelia Perez", "Alexander Roberts", "Evelyn Turner",
-            "Sebastian Phillips", "Harper Campbell", "Jack Parker", "Abigail Evans", "Liam Edwards",
-            "Ella Collins", "Mason Stewart", "Grace Morris", "Ethan Rogers", "Chloe Reed",
-            "Logan Cook", "Victoria Morgan", "Aiden Bell", "Hannah Murphy", "Samuel Bailey",
-            "Lily Rivera", "Matthew Cooper", "Zoe Richardson", "Jackson Cox", "Sofia Howard",
-            "Carlos García", "María Rodríguez", "José Hernández", "Ana López", "Luis González",
-            "Carmen Martínez", "Miguel Sánchez", "Lucía Pérez", "Juan Gómez", "Elena Díaz",
-            "Pedro Fernández", "Marta Torres", "Jorge Ramírez", "Laura Flores", "Sergio Ruiz",
-            "Patricia Morales", "Andrés Ortiz", "Claudia Jiménez", "Fernando Castro", "Natalia Romero",
-            "Hiroshi Tanaka", "Yuki Yamamoto", "Kenji Suzuki", "Sakura Watanabe", "Takeshi Nakamura",
-            "Aiko Kobayashi", "Yuto Kato", "Miyu Yoshida", "Haruto Yamada", "Rina Saito",
-            "Luca Rossi", "Giulia Russo", "Matteo Ferrari", "Sofia Bianchi", "Alessandro Conti",
-            "Chiara Romano", "Davide Greco", "Martina Gallo", "Francesco Rizzo", "Elisa Lombardi",
-            "Pierre Martin", "Marie Dubois", "Jean Leroy", "Sophie Moreau", "Louis Simon",
-            "Camille Laurent", "Lucas Lefevre", "Chloé Bernard", "Hugo Dupont", "Emma Richard",
-            "Ivan Ivanov", "Anastasia Smirnova", "Dmitry Kuznetsov", "Olga Popova", "Alexey Vasiliev",
-            "Ekaterina Petrov", "Nikolai Sokolov", "Irina Mikhailova", "Sergey Fedorov", "Natalia Morozova"
-        ];
-
         function randomDate() {
             const year = Math.floor(Math.random() * 5) + 2020;
             const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
@@ -707,7 +823,6 @@
 
         // Generate 100 random winners
         const winners = Array.from({ length: 100 }, (_, index) => ({
-            name: realNames[Math.floor(Math.random() * realNames.length)],
             date: randomDate(),
             number: `${Math.floor(10000 + Math.random() * 90000)}`,
             prize: randomPrize()
