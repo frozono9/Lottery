@@ -437,6 +437,33 @@
             .jackpot-amount {
                 font-size: 2rem;
             }
+            
+            /* Responsive table adjustments */
+            .winners-table th, .winners-table td {
+                padding: 6px 4px;
+                font-size: 0.8rem;
+            }
+            
+            /* Fixed column widths for mobile */
+            .winners-table th:nth-child(1),
+            .winners-table td:nth-child(1) {
+                width: 15%;
+            }
+            
+            .winners-table th:nth-child(2),
+            .winners-table td:nth-child(2) {
+                width: 30%;
+            }
+            
+            .winners-table th:nth-child(3),
+            .winners-table td:nth-child(3) {
+                width: 25%;
+            }
+            
+            .winners-table th:nth-child(4),
+            .winners-table td:nth-child(4) {
+                width: 30%;
+            }
         }
         
         /* Pagination for winners table */
@@ -517,7 +544,6 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
                                 <th>Date</th>
                                 <th>Number</th>
                                 <th>Prize</th>
@@ -768,13 +794,12 @@
             const startIndex = (currentPage - 1) * rowsPerPage;
             const pageWinners = winners.slice(startIndex, startIndex + rowsPerPage);
             
-            // Populate winners table
+            // Populate winners table without the name column
             pageWinners.forEach((winner, index) => {
                 const globalIndex = startIndex + index;
                 winnersContainer.innerHTML += `
                     <tr>
                         <td>${globalIndex + 1}</td>
-                        <td>${winner.name}</td>
                         <td>${winner.date}</td>
                         <td>${winner.number}</td>
                         <td>${winner.prize}</td>
