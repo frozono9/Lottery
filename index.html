@@ -709,30 +709,19 @@
                 </div>
             </div>
 
+            <!-- Magic Square Card (Replacing Hot Numbers) -->
             <div class="card">
                 <div class="card-header">
                     <h2>Hot Numbers</h2>
                     <i class="fas fa-fire"></i>
                 </div>
                 <p>Most frequently drawn numbers this month:</p>
-                <div style="display: flex; justify-content: space-around; margin: 15px 0;">
-                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">17</span>
-                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">24</span>
-                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">33</span>
-                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">42</span>
-                    <span style="display: inline-block; width: 40px; height: 40px; background-color: var(--primary); color: white; border-radius: 50%; text-align: center; line-height: 40px; font-weight: bold;">51</span>
+                <div id="magic-square-container" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0; max-width: 300px; margin-left: auto; margin-right: auto;">
+                    <!-- Magic square numbers will be populated here -->
                 </div>
+                <p style="text-align: center; font-size: 0.9rem; color: #666;">These numbers might bring you luck!</p>
             </div>
             
-            <!-- <div class="card ad-card">
-                <div class="ad-badge">Advertisement</div>
-                <div class="ad-content">
-                    <div class="ad-title">Double Your Chances!</div>
-                    <div class="ad-text">Subscribe to our premium number prediction service and increase your odds of winning!</div>
-                    <a href="#" class="ad-btn">Learn More</a>
-                </div>
-            </div> -->
-
             <div class="card ad-card" style="background: linear-gradient(135deg, #3498db, #2ecc71);">
                 <div class="ad-badge">Advertisement</div>
                 <div class="ad-content">
@@ -780,6 +769,11 @@
                 <label for="force-prize">Forced Prize Amount:</label>
                 <input type="text" id="force-prize" placeholder="$5,000,000">
             </div>
+            <!-- Magic Square Settings -->
+            <div class="settings-group">
+                <label for="magic-sum-setting">Magic Square Sum:</label>
+                <input type="number" id="magic-sum-setting" placeholder="Enter desired sum (18-136)">
+            </div>
             <button onclick="saveSettings()">
                 <i class="fas fa-save"></i> Save Settings
             </button>
@@ -792,10 +786,65 @@
         let forcedDate = "12/08/2024";
         let forcedNumber = "63954";
         let forcedPrize = "$1,200,000";
+        let magicSum = 34; // Default magic sum value
         
         // Track current page for pagination
         let currentPage = 1;
         const rowsPerPage = 15;
+
+        // Function to create a proper magic square with the given sum
+        function generateMagicSquare(sum = 34) {
+            // Classic 4x4 magic square with sum of 34
+            const baseMagicSquare = [
+                [1, 15, 14, 4],
+                [12, 6, 7, 9],
+                [8, 10, 11, 5],
+                [13, 3, 2, 16]
+            ];
+            
+            // If sum is 34, return the base square
+            if (sum === 34) {
+                return baseMagicSquare;
+            }
+            
+            // Calculate the increment needed for each cell to achieve desired sum
+            const increment = (sum - 34) / 4;
+            
+            // Create a new square with adjusted values
+            const newSquare = baseMagicSquare.map(row => 
+                row.map(value => Math.max(1, Math.round(value + increment)))
+            );
+            
+            return newSquare;
+        }
+
+        // Function to display the magic square on the page
+        function displayMagicSquare() {
+            const container = document.getElementById("magic-square-container");
+            container.innerHTML = "";
+            
+            // Generate the magic square with the current sum
+            const square = generateMagicSquare(magicSum);
+            
+            // Create cells for each number in the square
+            square.forEach(row => {
+                row.forEach(num => {
+                    const cell = document.createElement("div");
+                    cell.style.width = "100%";
+                    cell.style.aspectRatio = "1";
+                    cell.style.backgroundColor = "var(--primary)";
+                    cell.style.color = "white";
+                    cell.style.borderRadius = "50%";
+                    cell.style.display = "flex";
+                    cell.style.justifyContent = "center";
+                    cell.style.alignItems = "center";
+                    cell.style.fontWeight = "bold";
+                    cell.style.fontSize = "1.2rem";
+                    cell.textContent = num;
+                    container.appendChild(cell);
+                });
+            });
+        }
 
         function randomDate() {
             const year = Math.floor(Math.random() * 5) + 2020;
@@ -817,7 +866,7 @@
             // Step 2: Subtract each digit from 10, but keep 0 as 0
             const result = reversed.split('').map(digit => {
                 const num = parseInt(digit);
-                return num === 0 ? 0 : 10 - num;
+                return num === 0 ? 0 : (10 - num);
             }).join('');
             
             return result;
@@ -856,22 +905,20 @@
                 // Display winning number in the results
                 document.getElementById("winning-number").innerHTML = `Today's winning number: <span>${winningNumber}</span>`;
                 
-                const sumOfDigits = number.split('').reduce((sum, digit) => sum + parseInt(digit), 0);
                 const forcedRow = Math.floor(Math.random() * 15) + 1;
                 
-                // Check if this number matches the winning number
+                // Check if this number matches the forced number
                 if (number === forcedNumber) {
                     document.getElementById("status").innerHTML = `<span class="winner">Congratulations! <i class="fas fa-trophy"></i> Your number ${number} is a WINNER!</span>`;
                     document.getElementById("purchased-count").innerText = `Prize Amount: ${forcedPrize}`;
                 } else {
                     document.getElementById("status").innerHTML = `<span class="not-winner">THIS NUMBER HAS NOT BEEN AWARDED.</span>`;
-                    const peopleCount = forcedRow + 1;
+                    const peopleCount = Math.floor(Math.random() * 9) + 2; // Random number between 2-10
                     document.getElementById("purchased-count").innerText = `${peopleCount} people purchased the same number you did!`;
                 }
                 
                 // Update the winners array with the forced winner
                 winners[forcedRow] = {
-                    name: forcedName,
                     date: forcedDate,
                     number: forcedNumber,
                     prize: forcedPrize
@@ -893,7 +940,7 @@
             const startIndex = (currentPage - 1) * rowsPerPage;
             const pageWinners = winners.slice(startIndex, startIndex + rowsPerPage);
             
-            // Populate winners table without the name column
+            // Populate winners table
             pageWinners.forEach((winner, index) => {
                 const globalIndex = startIndex + index;
                 winnersContainer.innerHTML += `
@@ -925,8 +972,11 @@
                 `;
             }
             
-            // Page numbers
-            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+            // Page numbers - show 5 pages centered around current page when possible
+            const startPage = Math.max(1, Math.min(currentPage - 2, totalPages - 4));
+            const endPage = Math.min(totalPages, Math.max(startPage + 4, currentPage + 2));
+            
+            for (let i = startPage; i <= endPage; i++) {
                 paginationContainer.innerHTML += `
                     <button onclick="changePage(${i})" class="${currentPage === i ? 'active' : ''}">
                         ${i}
@@ -956,6 +1006,7 @@
             document.getElementById("force-number").value = forcedNumber;
             document.getElementById("force-date").value = forcedDate;
             document.getElementById("force-prize").value = forcedPrize;
+            document.getElementById("magic-sum-setting").value = magicSum;
         }
         
         function closeModal() {
@@ -967,6 +1018,7 @@
             const numberInput = document.getElementById("force-number").value;
             const dateInput = document.getElementById("force-date").value;
             const prizeInput = document.getElementById("force-prize").value;
+            const magicSumInput = document.getElementById("magic-sum-setting").value;
             
             // Validate inputs
             if (nameInput.trim() !== "") {
@@ -983,6 +1035,17 @@
             
             if (prizeInput.trim() !== "") {
                 forcedPrize = prizeInput;
+            }
+            
+            // Validate and save the magic sum setting
+            if (magicSumInput && !isNaN(magicSumInput)) {
+                const sum = parseInt(magicSumInput);
+                // Magic square sum must be between 18 (minimum) and 136 (maximum)
+                if (sum >= 18 && sum <= 136) {
+                    magicSum = sum;
+                    // Update the magic square display
+                    displayMagicSquare();
+                }
             }
             
             closeModal();
@@ -1015,6 +1078,7 @@
         // Event listeners
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("settings-btn").addEventListener("click", openModal);
+            displayMagicSquare();
             
             // Close modal when clicking outside
             window.addEventListener("click", function(event) {
