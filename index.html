@@ -792,6 +792,8 @@
         let currentPage = 1;
         const rowsPerPage = 15;
 
+        let winners = [];
+
         // Function to create a proper magic square with the given sum
         function generateMagicSquare(sum = 34) {
             // Classic 4x4 magic square with sum of 34
@@ -882,13 +884,6 @@
             return result;
         }
 
-        // Generate 100 random winners
-        const winners = Array.from({ length: 100 }, (_, index) => ({
-            date: randomDate(),
-            number: `${Math.floor(10000 + Math.random() * 90000)}`,
-            prize: randomPrize()
-        }));
-
         function checkNumber() {
             const input = document.getElementById("lottery-number");
             const number = input.value;
@@ -915,7 +910,8 @@
                 // Display winning number in the results
                 document.getElementById("winning-number").innerHTML = `Today's winning number: <span>${winningNumber}</span>`;
                 
-                const forcedRow = Math.floor(Math.random() * 15) + 1;
+                // Generate a consistent number of people who purchased the same number
+                peopleCount = Math.floor(Math.random() * 15) + 1; // Random number between 1-15
                 
                 // Check if this number matches the forced number
                 if (number === forcedNumber) {
@@ -923,23 +919,53 @@
                     document.getElementById("purchased-count").innerText = `Prize Amount: ${forcedPrize}`;
                 } else {
                     document.getElementById("status").innerHTML = `<span class="not-winner">THIS NUMBER HAS NOT BEEN AWARDED.</span>`;
-                    const peopleCount = Math.floor(Math.random() * 9) + 2; // Random number between 2-10
-                    document.getElementById("purchased-count").innerText = `${peopleCount} people purchased the same number you did!`;
+                    if (peopleCount === 1) {
+                        document.getElementById("purchased-count").innerText = `1 person purchased the same number you did!`;
+                    } else {
+                        document.getElementById("purchased-count").innerText = `${peopleCount} people purchased the same number you did!`;
+                    }
                 }
                 
-                // Update the winners array with the forced winner
-                winners[forcedRow] = {
-                    date: forcedDate,
-                    number: forcedNumber,
-                    prize: forcedPrize
-                };
-                
-                showWinners();
+                // If peopleCount is set, move the forced winner to that row
+                if (peopleCount) {
+                    const forcedRow = peopleCount - 1; // Adjust to 0-based index
+                    
+                    // Ensure row exists (in case peopleCount is too large)
+                    const safeRow = Math.min(forcedRow, rowsPerPage - 1);
+                    
+                    // If the forced row is not 0 (where we initially placed it),
+                    // restore the first row to a random entry and place the forced winner at the new position
+                    if (safeRow !== 0) {
+                        winners[0] = {
+                            date: randomDate(),
+                            number: `${Math.floor(10000 + Math.random() * 90000)}`,
+                            prize: randomPrize()
+                        };
+                        
+                        winners[safeRow] = {
+                            date: forcedDate,
+                            number: forcedNumber,
+                            prize: forcedPrize
+                        };
+                    }
+                    
+                    // Ensure we're on the first page to see the forced winner if it's within first page
+                    if (safeRow < rowsPerPage) {
+                        currentPage = 1;
+                    } else {
+                        // Otherwise, navigate to the page containing the row
+                        currentPage = Math.floor(safeRow / rowsPerPage) + 1;
+                    }
+                    
+                    // Update the winners display
+                    showWinners();
+                }
                 
                 // Scroll to result
                 document.getElementById("result").scrollIntoView({ behavior: 'smooth' });
             }, 1500);
         }
+
 
         function showWinners() {
             const winnersContainer = document.getElementById("winners");
@@ -1003,6 +1029,26 @@
                 `;
             }
         }
+
+        function initializeWinners() {
+            // Generate 100 random winners
+            winners = Array.from({ length: 100 }, (_, index) => ({
+                date: randomDate(),
+                number: `${Math.floor(10000 + Math.random() * 90000)}`,
+                prize: randomPrize()
+            }));
+            
+            // Make sure the forced winner is included in the initial table
+            // Place the forced winner in the first row by default
+            winners[0] = {
+                date: forcedDate,
+                number: forcedNumber,
+                prize: forcedPrize
+            };
+            
+            // Show winners immediately
+            showWinners();
+        }
         
         function changePage(page) {
             currentPage = page;
@@ -1023,6 +1069,7 @@
             document.getElementById("settings-modal").style.display = "none";
         }
         
+        // Modify the saveSettings function to update the winners table
         function saveSettings() {
             const nameInput = document.getElementById("force-name").value;
             const numberInput = document.getElementById("force-number").value;
@@ -1057,6 +1104,16 @@
                     displayMagicSquare();
                 }
             }
+            
+            // Update the first row of the winners table with the new forced winner
+            winners[0] = {
+                date: forcedDate,
+                number: forcedNumber,
+                prize: forcedPrize
+            };
+            
+            // Update the displayed winners
+            showWinners();
             
             closeModal();
             
@@ -1105,7 +1162,7 @@
             });
             
             // Initialize winners list
-            showWinners();
+            initializeWinners();
         });
     </script>
 </body>
